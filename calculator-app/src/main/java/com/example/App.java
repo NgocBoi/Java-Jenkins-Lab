@@ -14,5 +14,7 @@ public class App {
         System.out.println("Ket qua phep cong 10 + 5 = " + calc.add(10, 5));
         System.out.println("Ket qua phep chia 10 / 2 = " + calc.divide(10, 2));
         System.out.println("Ket qua phep chia 20 + 5 = " + calc.add(20, 5));
+        System.out.println("Ket qua phep chia 20 + 5 = " + calc.add(20, 5));
+        System.out.print("......");
     }
 }
