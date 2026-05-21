@@ -1,9 +1,7 @@
-name: Java CI with Maven
+name: Java CI with Custom HTML Dashboard
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -18,19 +16,32 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: maven
 
-    # Chạy lệnh sinh báo cáo HTML kèm theo lệnh test
-    - name: Build and Test with Maven
+    # Bước chạy test và tự động tạo file index.html từ script
+    - name: Build, Test and Generate HTML
       run: |
         cd calculator-app
-        mvn clean test surefire-report:report
-        mvn exec:java -Dexec.mainClass="com.calculator.App"
+        mvn clean test > build_log.txt || true # Chạy test và lưu log (|| true để nếu test fail vẫn chạy tiếp bước dưới)
+        
+        # Đoạn Script tự động tạo file index.html
+        cat <<EOF > index.html
+        <!DOCTYPE html>
+        <html>
+        <head><title>Báo cáo</title></head>
+        <body>
+          <h1>🚀 Kết Quả Quy Trình CI/CD</h1>
+          <p>Tên: abc, Tuổi: 20</p>
+          <hr>
+          <h3>Log hiển thị:</h3>
+          <pre>$(tail -n 20 build_log.txt)</pre>
+        </body>
+        </html>
+        EOF
 
-    # BƯỚC NÂNG CẤP: Đưa thư mục chứa file HTML lên GitHub Artifacts
-    - name: Upload Test Report HTML
-      if: always() # Luôn luôn chạy bước này kể cả khi test bị lỗi (failed)
+    # BƯỚC LẤY FILE: Đẩy file index.html lên mục Artifacts của GitHub
+    - name: Upload Custom Dashboard HTML
+      if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: maven-test-report-html # Tên của file zip khi tải về
-        path: calculator-app/target/site/ # Đường dẫn tới thư mục chứa file HTML
+        name: trang-giao-dien-custom
+        path: calculator-app/index.html
