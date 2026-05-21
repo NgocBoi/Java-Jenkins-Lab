@@ -29,11 +29,7 @@ jobs:
         <html>
         <head><title>Báo cáo</title></head>
         <body>
-          <h1>🚀 Kết Quả Quy Trình CI/CD</h1>
           <p>Tên: abc, Tuổi: 20</p>
-          <hr>
-          <h3>Log hiển thị:</h3>
-          <pre>$(tail -n 20 build_log.txt)</pre>
         </body>
         </html>
         EOF
